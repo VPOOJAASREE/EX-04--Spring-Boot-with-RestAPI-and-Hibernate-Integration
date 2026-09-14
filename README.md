@@ -317,6 +317,10 @@ public class MovieController {
 
 <img width="1910" height="1012" alt="ex 4 delete" src="https://github.com/user-attachments/assets/31f66ea0-460a-45d2-bf28-c09565fc64e6" />
 
+### H2 CONSOLE
+
+<img width="1907" height="836" alt="EX 4 H2 CONSOLE" src="https://github.com/user-attachments/assets/a0ead48c-5aa1-42e9-aac5-149de4871e84" />
+
 ## Result
 
 Thus the development of a Spring Boot application to store and retrieve data from a Movies database is completed successfully.
