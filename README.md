@@ -309,7 +309,6 @@ public class MovieController {
 
 <img width="1912" height="982" alt="ex 4 get id" src="https://github.com/user-attachments/assets/94585eb0-bf69-416b-8f56-b89cd883a876" />
 
-
 ### PUT /movies/{id}
 
 <img width="1917" height="1012" alt="ex 4 put" src="https://github.com/user-attachments/assets/76b62541-b320-4003-a522-7390fa010794" />
@@ -318,7 +317,6 @@ public class MovieController {
 
 <img width="1910" height="1012" alt="ex 4 delete" src="https://github.com/user-attachments/assets/31f66ea0-460a-45d2-bf28-c09565fc64e6" />
 
-
 ## Result
 
-Thus the development of a Spring Boot application to store and retrieve data from a Movies database is completed successfully
+Thus the development of a Spring Boot application to store and retrieve data from a Movies database is completed successfully.
