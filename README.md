@@ -295,7 +295,6 @@ public class MovieController {
 }
 
 ```
-
 ## Output
 
 ### POST /movies
@@ -318,10 +317,6 @@ public class MovieController {
 ### DELETE /movies/{id}
 
 <img width="1910" height="1012" alt="ex 4 delete" src="https://github.com/user-attachments/assets/31f66ea0-460a-45d2-bf28-c09565fc64e6" />
-
-### H2 CONSOLE
-
-<img width="1907" height="836" alt="EX 4 H2 CONSOLE" src="https://github.com/user-attachments/assets/ce5593db-dfca-4f4d-88cf-01d50310d26d" />
 
 
 ## Result
