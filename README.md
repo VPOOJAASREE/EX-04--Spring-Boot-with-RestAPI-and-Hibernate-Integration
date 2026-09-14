@@ -313,7 +313,7 @@ public class MovieController {
 
 ### PUT /movies/{id}
 
-<img width="1005" height="658" alt="image" src="https://github.com/user-attachments/assets/2f3c262e-ca83-423b-8062-5f185a4c45bb" />
+<img width="1917" height="1012" alt="ex 4 put" src="https://github.com/user-attachments/assets/76b62541-b320-4003-a522-7390fa010794" />
 
 ### DELETE /movies/{id}
 
