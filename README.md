@@ -39,13 +39,13 @@ Create MovieController to define REST endpoints for CRUD operations:
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>4.0.6</version>
+		<version>4.1.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>movie</artifactId>
+	<artifactId>ex4</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>movie</name>
+	<name/>
 	<description/>
 	<url/>
 	<licenses>
@@ -61,7 +61,7 @@ Create MovieController to define REST endpoints for CRUD operations:
 		<url/>
 	</scm>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>26</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -77,6 +77,12 @@ Create MovieController to define REST endpoints for CRUD operations:
 			<artifactId>spring-boot-starter-webmvc</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
@@ -104,13 +110,13 @@ Create MovieController to define REST endpoints for CRUD operations:
 	</build>
 
 </project>
+
 ```
 
 ### application.properties
 
 ```properties
-spring.application.name=movie
-
+spring.application.name=ex4
 spring.datasource.url=jdbc:h2:mem:testdb
 spring.datasource.driverClassName=org.h2.Driver
 spring.datasource.username=sa
@@ -122,14 +128,16 @@ spring.jpa.show-sql=true
 
 spring.h2.console.enabled=true
 spring.h2.console.path=/h2-console
+
+server.port=8081
+
 ```
 
 ### Movie.java
 
 ```java
-package com.example.movies.model;
+package com.example.ex4;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -137,109 +145,171 @@ import jakarta.persistence.Id;
 
 @Entity
 public class Movie {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String title;
     private String genre;
-    @Column(name = "release_year")
-    private int releaseYear;
     private double rating;
+    private int releaseYear;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
-    public String getGenre() { return genre; }
-    public void setGenre(String genre) { this.genre = genre; }
-    public int getReleaseYear() { return releaseYear; }
-    public void setReleaseYear(int releaseYear) { this.releaseYear = releaseYear; }
-    public double getRating() { return rating; }
-    public void setRating(double rating) { this.rating = rating; }
+    public Movie() {
+    }
+
+    public Movie(String title, String genre, double rating, int releaseYear) {
+        this.title = title;
+        this.genre = genre;
+        this.rating = rating;
+        this.releaseYear = releaseYear;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    public int getReleaseYear() {
+        return releaseYear;
+    }
+
+    public void setReleaseYear(int releaseYear) {
+        this.releaseYear = releaseYear;
+    }
 }
+
 ```
 
 ### MovieRepository.java
 
 ```java
-package com.example.movies.repository;
 
-import com.example.movies.model.Movie;
+package com.example.ex4;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public interface MovieRepository extends JpaRepository<Movie, Long> {
 }
+
 ```
 
 ### MovieController.java
 
 ```java
-package com.example.movies.controller;
 
-import com.example.movies.model.Movie;
-import com.example.movies.repository.MovieRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+package com.example.ex4;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+        import java.util.List;
 
 @RestController
 @RequestMapping("/movies")
 public class MovieController {
 
-    @Autowired
-    private MovieRepository repo;
+    private final MovieRepository movieRepository;
 
+    // Constructor Injection
+    public MovieController(MovieRepository movieRepository) {
+        this.movieRepository = movieRepository;
+    }
+
+    // 1. GET /movies
+    // Get all movies
     @GetMapping
     public List<Movie> getAllMovies() {
-        return repo.findAll();
+        return movieRepository.findAll();
     }
 
+    // 2. GET /movies/{id}
+    // Get one movie by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Movie> getMovieById(@PathVariable Long id) {
-        return repo.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public Movie getMovieById(@PathVariable Long id) {
+        return movieRepository.findById(id).orElse(null);
     }
 
+    // 3. POST /movies
+    // Add a new movie
     @PostMapping
     public Movie addMovie(@RequestBody Movie movie) {
-        return repo.save(movie);
+        return movieRepository.save(movie);
     }
 
+    // 4. PUT /movies/{id}
+    // Update an existing movie
     @PutMapping("/{id}")
-    public ResponseEntity<Movie> updateMovie(@PathVariable Long id, @RequestBody Movie movieDetails) {
-        return repo.findById(id).map(movie -> {
-            movie.setTitle(movieDetails.getTitle());
-            movie.setGenre(movieDetails.getGenre());
-            movie.setReleaseYear(movieDetails.getReleaseYear());
-            movie.setRating(movieDetails.getRating());
-            return ResponseEntity.ok(repo.save(movie));
-        }).orElse(ResponseEntity.notFound().build());
+    public Movie updateMovie(
+            @PathVariable Long id,
+            @RequestBody Movie movie) {
+
+        Movie existingMovie =
+                movieRepository.findById(id).orElse(null);
+
+        if (existingMovie != null) {
+
+            existingMovie.setTitle(movie.getTitle());
+            existingMovie.setGenre(movie.getGenre());
+            existingMovie.setRating(movie.getRating());
+            existingMovie.setReleaseYear(movie.getReleaseYear());
+
+            return movieRepository.save(existingMovie);
+        }
+
+        return null;
     }
 
+    // 5. DELETE /movies/{id}
+    // Delete a movie
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteMovie(@PathVariable Long id) {
-        return repo.findById(id).map(movie -> {
-            repo.delete(movie);
-            return ResponseEntity.ok().build();
-        }).orElse(ResponseEntity.notFound().build());
+    public String deleteMovie(@PathVariable Long id) {
+
+        movieRepository.deleteById(id);
+
+        return "Movie deleted successfully";
     }
 }
+
 ```
 
 ## Output
 
 ### POST /movies
 
-<img width="1011" height="662" alt="image" src="https://github.com/user-attachments/assets/d0796e32-c9c0-428c-be8d-d3b06619e5a6" />
+<img width="1907" height="975" alt="ex4 post" src="https://github.com/user-attachments/assets/77daae4a-7b56-4951-a40a-2e220cd55434" />
 
 ### GET /movies
 
-<img width="1003" height="654" alt="image" src="https://github.com/user-attachments/assets/1778c7f2-21fa-456b-9bb4-c7797cdd87dc" />
+<img width="1892" height="997" alt="ex 4 get" src="https://github.com/user-attachments/assets/cba7b241-bb7c-49a1-8152-00b369aca567" />
+
+### GET /movies/{id}
+
+<img width="1912" height="982" alt="ex 4 get id" src="https://github.com/user-attachments/assets/94585eb0-bf69-416b-8f56-b89cd883a876" />
+
 
 ### PUT /movies/{id}
 
@@ -247,7 +317,12 @@ public class MovieController {
 
 ### DELETE /movies/{id}
 
-<img width="1008" height="657" alt="image" src="https://github.com/user-attachments/assets/ed798547-1fc2-4a3f-b48c-7bb8a5c353a2" />
+<img width="1910" height="1012" alt="ex 4 delete" src="https://github.com/user-attachments/assets/31f66ea0-460a-45d2-bf28-c09565fc64e6" />
+
+### H2 CONSOLE
+
+<img width="1907" height="836" alt="EX 4 H2 CONSOLE" src="https://github.com/user-attachments/assets/ce5593db-dfca-4f4d-88cf-01d50310d26d" />
+
 
 ## Result
 
